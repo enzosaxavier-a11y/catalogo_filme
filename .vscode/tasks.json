@@ -11,6 +11,8 @@
                 "-Wall",
                 "-Wextra",
                 "-std=c++17",
+                "-finput-charset=UTF-8",
+                "-fexec-charset=UTF-8",
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
