@@ -11,6 +11,7 @@
 #include <locale>
 #include <string>
 #include <iomanip>
+#include <limits>
 #include <conio.h>
 #include <windows.h>
 
@@ -29,110 +30,107 @@ struct Filme {
     bool disponivel;
 };
 
-const int C = 5;
+const int C = 15;
+Filme vetor[C] = {
+    {2001, 101, "O Senhor dos Aneis", 29.90f, "Fantasia",
+     "Um grupo inicia uma jornada para destruir um poderoso anel.",
+     178.0f, 12, 8.8f, true},
 
-Filme vetor[C];
-int quant = 0;
+    {2004, 102, "Harry Potter e o Prisioneiro de Azkaban", 24.90f, "Fantasia",
+     "Harry descobre novos segredos sobre seu passado em Hogwarts.",
+     142.0f, 10, 7.9f, true},
 
-//========FUNCOES AUXILIARES E VALIDACOES============
+    {2014, 103, "Interestelar", 34.90f, "Ficcao cientifica",
+     "Astronautas viajam pelo espaco em busca de um novo lar para a humanidade.",
+     169.0f, 10, 8.7f, false},
 
-void pausar() {
-    cout << "\nPressione qualquer tecla para continuar";
-    cout.flush();
-    _getch();
-}
+    {2019, 104, "Vingadores Ultimato", 32.90f, "Acao",
+     "Os herois se unem para tentar reverter as perdas causadas por Thanos.",
+     181.0f, 12, 8.4f, true},
 
-string lerTexto(string mensagem) {
-    string texto;
-    cout << mensagem;
-    getline(cin >> ws, texto);
-    return texto;
-}
+    {1997, 105, "Titanic", 19.90f, "Drama",
+     "Um casal vive um romance durante a viagem do navio Titanic.",
+     194.0f, 12, 7.9f, true},
 
-int lerInteiro(string mensagem) {
-    int valor;
-    cout << mensagem;
-    cin >> valor;
-    return valor;
-}
+    {1972, 106, "O Poderoso Chefao", 27.90f, "Drama",
+     "A historia de uma poderosa familia envolvida com o crime organizado.",
+     175.0f, 14, 9.2f, false},
 
-float lerReal(string mensagem) {
-    float valor;
-    cout << mensagem;
-    cin >> valor;
-    return valor;
-}
+    {1995, 107, "Toy Story", 18.90f, "Animacao",
+     "Brinquedos ganham vida quando seus donos nao estao por perto.",
+     81.0f, 0, 8.3f, true},
 
-bool textosIguais(string texto1, string texto2) {
-    return texto1 == texto2;
-}
+    {2017, 108, "Corra", 21.90f, "Terror",
+     "Um jovem visita a familia da namorada e descobre segredos assustadores.",
+     104.0f, 14, 7.8f, true},
 
-Filme lerFilme() {
-    Filme filme;
+    {2015, 109, "Mad Max Estrada da Furia", 26.90f, "Acao",
+     "Sobreviventes atravessam um deserto enquanto fogem de um tirano.",
+     120.0f, 16, 8.1f, false},
 
-    filme.nome = lerTexto("Nome (maximo 50 caracteres): ");
-    filme.id = lerInteiro("ID (1 a 999): ");
-    filme.ano = lerInteiro("Ano de lancamento (1888 a 2026): ");
-    filme.preco = lerReal("Preco (0 a 9999.99, use ponto): R$ ");
-    filme.categoria = lerTexto("Categoria (maximo 30 caracteres): ");
-    filme.sinopse = lerTexto("Sinopse (maximo 100 caracteres): ");
-    filme.duracao = lerReal("Duracao em minutos (1 a 600): ");
-    filme.faixaet = lerInteiro("Faixa etaria (0 a 18): ");
-    filme.avaliacao = lerReal("Avaliacao (0 a 10): ");
+    {2002, 110, "Cidade de Deus", 23.90f, "Drama",
+     "Jovens enfrentam a violencia e o crime em uma comunidade do Rio de Janeiro.",
+     130.0f, 16, 8.6f, true}
+};
 
-    int disponivel = lerInteiro("Disponivel (0-Nao / 1-Sim): ");
-    filme.disponivel = disponivel == 1;
+int quant = 10;
 
-    return filme;
-}
-
-int buscarPorNome(string nome) {
-    for (int i = 0; i < quant; i++) {
-        if (textosIguais(vetor[i].nome, nome)) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-int buscarPorId(int id) {
-    for (int i = 0; i < quant; i++) {
-        if (vetor[i].id == id) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-void imprimirFilme(Filme filme, int posicao) {
-    cout << fixed << setprecision(2);
-    cout << "\n-------------------------------------\n";
-    cout << "Posicao: " << posicao + 1 << "\n";
-    cout << "Nome: " << filme.nome << "\n";
-    cout << "ID: " << filme.id << "\n";
-    cout << "Ano de lancamento: " << filme.ano << "\n";
-    cout << "Preco: R$ " << filme.preco << "\n";
-    cout << "Categoria: " << filme.categoria << "\n";
-    cout << "Sinopse: " << filme.sinopse << "\n";
-    cout << "Duracao: " << filme.duracao << " minutos\n";
-    cout << "Faixa etaria: " << filme.faixaet << "\n";
-    cout << "Avaliacao: " << filme.avaliacao << "\n";
-    cout << "Disponivel: " << (filme.disponivel ? "Sim" : "Nao") << "\n";
-}
-
-//========TASK 2: INSERIR NO INICIO============
+//========FUNCAO DE INSERCAO NO INICIO============
 
 void insercao() {
     system("cls");
 
     if (quant >= C) {
-        cout << "\nCatalogo cheio! O limite e de " << C << " filmes.\n";
-        pausar();
+        cout << "\n\n\t\tCatalogo cheio!\n\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    cout << "\nInsira o novo filme\n\n";
-    Filme novo = lerFilme();
+    Filme novo;
+
+    cout << "\t\tInsira novo filme!\n\n";
+
+    cout << "Nome: ";
+    getline(cin >> ws, novo.nome);
+
+    cout << "ID: ";
+    cin >> novo.id;
+
+    cout << "Ano de lancamento: ";
+    cin >> novo.ano;
+
+    cout << "Preco: ";
+    cin >> novo.preco;
+
+    cout << "Categoria: ";
+    getline(cin >> ws, novo.categoria);
+
+    cout << "Sinopse: ";
+    getline(cin >> ws, novo.sinopse);
+
+    cout << "Duracao (min): ";
+    cin >> novo.duracao;
+
+    cout << "Faixa etaria: ";
+    cin >> novo.faixaet;
+
+    cout << "Avaliacao (0-10): ";
+    cin >> novo.avaliacao;
+
+    cout << "O filme esta disponivel? (0-Nao / 1-Sim): ";
+    cin >> novo.disponivel;
+
+    char conf;
+    cout << "\nDeseja mesmo inserir esse filme? (S/N): ";
+    cin >> conf;
+
+    if (conf != 'S' && conf != 's') {
+        cout << "\nInsercao cancelada!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
+        return;
+    }
 
     for (int i = quant; i > 0; i--) {
         vetor[i] = vetor[i - 1];
@@ -142,104 +140,232 @@ void insercao() {
     quant++;
 
     cout << "\nFilme inserido no inicio com sucesso!\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 3: INSERIR NA POSICAO K============
+//========FUNCAO DE INSERCAO NA POSICAO K============
 
 void insercaoPosK() {
     system("cls");
 
     if (quant >= C) {
-        cout << "\nCatalogo cheio! O limite e de " << C << " filmes.\n";
-        pausar();
+        cout << "\nCatalogo cheio!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    int k = lerInteiro("\nInforme a posicao onde deseja inserir o filme: ");
+    int k;
+
+    cout << "\nInforme a posicao onde deseja inserir o filme: ";
+    cin >> k;
 
     if (k < 1 || k > quant + 1) {
-        cout << "\nPosicao invalida! Use uma posicao de 1 ate "
-             << quant + 1 << ".\n";
-        pausar();
+        cout << "\nPosicao invalida!\n";
+        cout << "As posicoes permitidas sao de 1 ate " << quant + 1 << ".\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    cout << "\nDados do novo filme\n\n";
-    Filme novo = lerFilme();
-    int posicao = k - 1;
+    Filme novo;
 
-    for (int i = quant; i > posicao; i--) {
+    cout << "\nDados do novo filme\n\n";
+
+    cout << "Nome: ";
+    getline(cin >> ws, novo.nome);
+
+    cout << "ID: ";
+    cin >> novo.id;
+
+    cout << "Ano de lancamento: ";
+    cin >> novo.ano;
+
+    cout << "Preco: ";
+    cin >> novo.preco;
+
+    cout << "Categoria: ";
+    getline(cin >> ws, novo.categoria);
+
+    cout << "Sinopse: ";
+    getline(cin >> ws, novo.sinopse);
+
+    cout << "Duracao em minutos: ";
+    cin >> novo.duracao;
+
+    cout << "Faixa etaria: ";
+    cin >> novo.faixaet;
+
+    cout << "Avaliacao de 0 a 10: ";
+    cin >> novo.avaliacao;
+
+    cout << "O filme esta disponivel? (0-Nao / 1-Sim): ";
+    cin >> novo.disponivel;
+
+    char conf;
+    cout << "\nDeseja mesmo inserir esse filme na posicao " << k
+         << "? (S/N): ";
+    cin >> conf;
+
+    if (conf != 'S' && conf != 's') {
+        cout << "\nInsercao cancelada!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
+        return;
+    }
+
+    int pos = k - 1;
+
+    for (int i = quant; i > pos; i--) {
         vetor[i] = vetor[i - 1];
     }
 
-    vetor[posicao] = novo;
+    vetor[pos] = novo;
     quant++;
 
     cout << "\nFilme inserido na posicao " << k << " com sucesso!\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 4: ALTERAR O POSTERIOR A K============
+//========FUNCAO DE ALTERAR O POSTERIOR A K============
 
 void alterarPosteriorK() {
     system("cls");
 
     if (quant < 2) {
-        cout << "\nNao existem filmes suficientes para alterar um posterior!\n";
-        pausar();
+        cout << "\nNao existem filmes suficientes!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    int k = lerInteiro("\nInforme a posicao k: ");
+    int k;
+
+    cout << "\nInforme a posicao k: ";
+    cin >> k;
 
     if (k < 1 || k >= quant) {
         cout << "\nPosicao invalida ou sem filme posterior!\n";
-        pausar();
+        cout << "Informe uma posicao entre 1 e " << quant - 1 << ".\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
-    int posicaoPosterior = k;
 
-    cout << "\nFilme que sera alterado: "
-         << vetor[posicaoPosterior].nome << "\n";
-    cout << "\nInforme os novos dados\n\n";
+    int posPosterior = k;
 
-    vetor[posicaoPosterior] = lerFilme();
+    cout << "\nO filme posterior que sera alterado e: "
+         << vetor[posPosterior].nome << "\n";
+    cout << "\nInforme os novos dados do filme\n\n";
+
+    Filme alterado;
+
+    cout << "Nome: ";
+    getline(cin >> ws, alterado.nome);
+
+    cout << "ID: ";
+    cin >> alterado.id;
+
+    cout << "Ano de lancamento: ";
+    cin >> alterado.ano;
+
+    cout << "Preco: ";
+    cin >> alterado.preco;
+
+    cout << "Categoria: ";
+    getline(cin >> ws, alterado.categoria);
+
+    cout << "Sinopse: ";
+    getline(cin >> ws, alterado.sinopse);
+
+    cout << "Duracao em minutos: ";
+    cin >> alterado.duracao;
+
+    cout << "Faixa etaria: ";
+    cin >> alterado.faixaet;
+
+    cout << "Avaliacao de 0 a 10: ";
+    cin >> alterado.avaliacao;
+
+    cout << "O filme esta disponivel? (0-Nao / 1-Sim): ";
+    cin >> alterado.disponivel;
+
+    char conf;
+    cout << "\nDeseja mesmo alterar esse filme? (S/N): ";
+    cin >> conf;
+
+    if (conf != 'S' && conf != 's') {
+        cout << "\nAlteracao cancelada!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
+        return;
+    }
+
+    vetor[posPosterior] = alterado;
 
     cout << "\nFilme da posicao " << k + 1 << " alterado com sucesso!\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 5: REMOVER O POSTERIOR AO ID X============
+//========FUNCAO DE REMOVER O POSTERIOR AO ID X============
 
 void removerPosteriorId() {
     system("cls");
 
     if (quant < 2) {
         cout << "\nNao existem filmes suficientes para remover um posterior!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    int idProcurado = lerInteiro("\nInforme o ID do filme (1 a 999): ");
-    int posicaoId = buscarPorId(idProcurado);
+    int idProcurado;
 
-    if (posicaoId == -1) {
+    cout << "\nInforme o ID do filme: ";
+    cin >> idProcurado;
+
+    int posId = -1;
+
+    for (int i = 0; i < quant; i++) {
+        if (vetor[i].id == idProcurado) {
+            posId = i;
+            break;
+        }
+    }
+
+    if (posId == -1) {
         cout << "\nFilme com esse ID nao encontrado!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    if (posicaoId == quant - 1) {
+    if (posId == quant - 1) {
         cout << "\nO filme encontrado e o ultimo e nao possui posterior!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    int posicaoRemover = posicaoId + 1;
-    string nomeRemovido = vetor[posicaoRemover].nome;
+    int posRemover = posId + 1;
+    string nomeRemovido = vetor[posRemover].nome;
 
-    for (int i = posicaoRemover; i < quant - 1; i++) {
+    char conf;
+    cout << "\nDeseja mesmo remover o filme \"" << nomeRemovido
+         << "\"? (S/N): ";
+    cin >> conf;
+
+    if (conf != 'S' && conf != 's') {
+        cout << "\nRemocao cancelada!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
+        return;
+    }
+
+    for (int i = posRemover; i < quant - 1; i++) {
         vetor[i] = vetor[i + 1];
     }
 
@@ -247,107 +373,179 @@ void removerPosteriorId() {
 
     cout << "\nO filme posterior \"" << nomeRemovido
          << "\" foi removido com sucesso!\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 6: CONSULTAR O ANTERIOR AO NOME Y============
+//========FUNCAO DE CONSULTAR O ANTERIOR AO NOME Y============
 
 void consultarAnteriorNome() {
     system("cls");
 
     if (quant < 2) {
         cout << "\nNao existem filmes suficientes para consultar um anterior!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    string nomeProcurado = lerTexto("\nInforme o nome do filme: ");
-    int posicaoNome = buscarPorNome(nomeProcurado);
+    string nomeProcurado;
 
-    if (posicaoNome == -1) {
+    cout << "\nInforme o nome do filme: ";
+    getline(cin >> ws, nomeProcurado);
+
+    int posNome = -1;
+
+    for (int i = 0; i < quant; i++) {
+        if (vetor[i].nome == nomeProcurado) {
+            posNome = i;
+            break;
+        }
+    }
+
+    if (posNome == -1) {
         cout << "\nFilme nao encontrado!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    if (posicaoNome == 0) {
+    if (posNome == 0) {
         cout << "\nO filme encontrado e o primeiro e nao possui anterior!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    int posicaoAnterior = posicaoNome - 1;
+    int posAnterior = posNome - 1;
 
-    cout << "\nFilme anterior a \"" << vetor[posicaoNome].nome << "\":\n";
-    imprimirFilme(vetor[posicaoAnterior], posicaoAnterior);
-    pausar();
+    cout << "\nFilme anterior a \"" << vetor[posNome].nome << "\":\n\n";
+    cout << "Posicao: " << posAnterior + 1 << "\n";
+    cout << "Nome: " << vetor[posAnterior].nome << "\n";
+    cout << "ID: " << vetor[posAnterior].id << "\n";
+    cout << "Ano de lancamento: " << vetor[posAnterior].ano << "\n";
+    cout << "Preco: R$ " << vetor[posAnterior].preco << "\n";
+    cout << "Categoria: " << vetor[posAnterior].categoria << "\n";
+    cout << "Sinopse: " << vetor[posAnterior].sinopse << "\n";
+    cout << "Duracao: " << vetor[posAnterior].duracao << " minutos\n";
+    cout << "Faixa etaria: " << vetor[posAnterior].faixaet << "\n";
+    cout << "Avaliacao: " << vetor[posAnterior].avaliacao << "\n";
+    cout << "Disponivel: "
+         << (vetor[posAnterior].disponivel ? "Sim" : "Nao") << "\n";
+
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 7: IMPRIMIR A LISTA============
+//========FUNCAO DE IMPRIMIR A LISTA============
 
 void imprimirLista() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
     cout << "\n========== LISTA DE FILMES ==========\n";
 
     for (int i = 0; i < quant; i++) {
-        imprimirFilme(vetor[i], i);
+        cout << "\n-------------------------------------\n";
+        cout << "Posicao: " << i + 1 << "\n";
+        cout << "Nome: " << vetor[i].nome << "\n";
+        cout << "ID: " << vetor[i].id << "\n";
+        cout << "Ano de lancamento: " << vetor[i].ano << "\n";
+        cout << "Preco: R$ " << vetor[i].preco << "\n";
+        cout << "Categoria: " << vetor[i].categoria << "\n";
+        cout << "Sinopse: " << vetor[i].sinopse << "\n";
+        cout << "Duracao: " << vetor[i].duracao << " minutos\n";
+        cout << "Faixa etaria: " << vetor[i].faixaet << "\n";
+        cout << "Avaliacao: " << vetor[i].avaliacao << "\n";
+        cout << "Disponivel: " << (vetor[i].disponivel ? "Sim" : "Nao") << "\n";
     }
 
     cout << "\n-------------------------------------\n";
     cout << "Quantidade de filmes: " << quant << "\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 8: AUMENTAR O PRECO EM 15 POR CENTO============
+//========FUNCAO DE AUMENTAR O PRECO EM 15 POR CENTO============
 
 void aumentarPrecoNome() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    string nomeProcurado = lerTexto("\nInforme o nome do filme: ");
-    int posicaoNome = buscarPorNome(nomeProcurado);
+    string nomeProcurado;
 
-    if (posicaoNome == -1) {
+    cout << "\nInforme o nome do filme: ";
+    getline(cin >> ws, nomeProcurado);
+
+    int posNome = -1;
+
+    for (int i = 0; i < quant; i++) {
+        if (vetor[i].nome == nomeProcurado) {
+            posNome = i;
+            break;
+        }
+    }
+
+    if (posNome == -1) {
         cout << "\nFilme nao encontrado!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    float precoAnterior = vetor[posicaoNome].preco;
-    vetor[posicaoNome].preco *= 1.15f;
+    char conf;
+    cout << "\nDeseja mesmo aumentar o preco do filme \""
+         << vetor[posNome].nome << "\" em 15%? (S/N): ";
+    cin >> conf;
+
+    if (conf != 'S' && conf != 's') {
+        cout << "\nAlteracao de preco cancelada!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
+        return;
+    }
+
+    float precoAnterior = vetor[posNome].preco;
+    vetor[posNome].preco = vetor[posNome].preco * 1.15f;
 
     cout << fixed << setprecision(2);
-    cout << "\nFilme: " << vetor[posicaoNome].nome << "\n";
+    cout << "\nFilme: " << vetor[posNome].nome << "\n";
     cout << "Preco anterior: R$ " << precoAnterior << "\n";
-    cout << "Preco atualizado: R$ " << vetor[posicaoNome].preco << "\n";
-    pausar();
+    cout << "Preco atualizado: R$ " << vetor[posNome].preco << "\n";
+
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 9: CONTAR FILMES POR AVALIACAO============
+//========FUNCAO DE CONTAR FILMES POR AVALIACAO============
 
 void contarPorAvaliacao() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    float avaliacaoEscolhida = lerReal("\nInforme a avaliacao X (0 a 10): ");
+    float avaliacaoEscolhida;
     int contador = 0;
+
+    cout << "\nInforme a avaliacao X: ";
+    cin >> avaliacaoEscolhida;
 
     for (int i = 0; i < quant; i++) {
         if (vetor[i].avaliacao >= avaliacaoEscolhida) {
@@ -357,28 +555,45 @@ void contarPorAvaliacao() {
 
     cout << "\nQuantidade de filmes com avaliacao maior ou igual a "
          << avaliacaoEscolhida << ": " << contador << "\n";
-    pausar();
+
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 10: IMPRIMIR FILMES DA CATEGORIA X============
+//========FUNCAO DE IMPRIMIR FILMES DA CATEGORIA X============
 
 void imprimirPorCategoria() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    string categoriaProcurada = lerTexto("\nInforme a categoria X: ");
+    string categoriaProcurada;
     int encontrados = 0;
+
+    cout << "\nInforme a categoria X: ";
+    getline(cin >> ws, categoriaProcurada);
 
     cout << "\nFilmes da categoria \"" << categoriaProcurada << "\":\n";
 
     for (int i = 0; i < quant; i++) {
-        if (textosIguais(vetor[i].categoria, categoriaProcurada)) {
-            imprimirFilme(vetor[i], i);
+        if (vetor[i].categoria == categoriaProcurada) {
+            cout << "\n-------------------------------------\n";
+            cout << "Posicao: " << i + 1 << "\n";
+            cout << "Nome: " << vetor[i].nome << "\n";
+            cout << "ID: " << vetor[i].id << "\n";
+            cout << "Ano de lancamento: " << vetor[i].ano << "\n";
+            cout << "Preco: R$ " << vetor[i].preco << "\n";
+            cout << "Categoria: " << vetor[i].categoria << "\n";
+            cout << "Sinopse: " << vetor[i].sinopse << "\n";
+            cout << "Duracao: " << vetor[i].duracao << " minutos\n";
+            cout << "Faixa etaria: " << vetor[i].faixaet << "\n";
+            cout << "Avaliacao: " << vetor[i].avaliacao << "\n";
+            cout << "Disponivel: " << (vetor[i].disponivel ? "Sim" : "Nao") << "\n";
             encontrados++;
         }
     }
@@ -389,29 +604,45 @@ void imprimirPorCategoria() {
         cout << "\nQuantidade encontrada: " << encontrados << "\n";
     }
 
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 11: DISPONIVEIS POR FAIXA ETARIA============
+//========FUNCAO DE EXIBIR DISPONIVEIS POR FAIXA ETARIA============
 
 void imprimirDisponiveisPorFaixa() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    int faixaEscolhida = lerInteiro("\nInforme a faixa etaria X (0 a 18): ");
+    int faixaEscolhida;
     int encontrados = 0;
+
+    cout << "\nInforme a faixa etaria X: ";
+    cin >> faixaEscolhida;
 
     cout << "\nFilmes disponiveis com faixa etaria maior ou igual a "
          << faixaEscolhida << ":\n";
 
     for (int i = 0; i < quant; i++) {
         if (vetor[i].disponivel && vetor[i].faixaet >= faixaEscolhida) {
-            imprimirFilme(vetor[i], i);
+            cout << "\n-------------------------------------\n";
+            cout << "Posicao: " << i + 1 << "\n";
+            cout << "Nome: " << vetor[i].nome << "\n";
+            cout << "ID: " << vetor[i].id << "\n";
+            cout << "Ano de lancamento: " << vetor[i].ano << "\n";
+            cout << "Preco: R$ " << vetor[i].preco << "\n";
+            cout << "Categoria: " << vetor[i].categoria << "\n";
+            cout << "Sinopse: " << vetor[i].sinopse << "\n";
+            cout << "Duracao: " << vetor[i].duracao << " minutos\n";
+            cout << "Faixa etaria: " << vetor[i].faixaet << "\n";
+            cout << "Avaliacao: " << vetor[i].avaliacao << "\n";
+            cout << "Disponivel: Sim\n";
             encontrados++;
         }
     }
@@ -422,17 +653,19 @@ void imprimirDisponiveisPorFaixa() {
         cout << "\nQuantidade encontrada: " << encontrados << "\n";
     }
 
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 12: ORDENAR POR ANO DECRESCENTE============
+//========FUNCAO DE ORDENAR FILMES POR ANO DECRESCENTE============
 
 void ordenarPorAnoDecrescente() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
@@ -454,17 +687,19 @@ void ordenarPorAnoDecrescente() {
     }
 
     cout << "\n\nOrdenacao concluida com sucesso!\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 13: VALOR TOTAL E MEDIA POR CATEGORIA============
+//========FUNCAO DE CALCULAR VALOR TOTAL E MEDIA POR CATEGORIA============
 
 void calcularValores() {
     system("cls");
 
     if (quant == 0) {
         cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
@@ -482,7 +717,7 @@ void calcularValores() {
         bool categoriaJaExibida = false;
 
         for (int j = 0; j < i; j++) {
-            if (textosIguais(vetor[j].categoria, vetor[i].categoria)) {
+            if (vetor[j].categoria == vetor[i].categoria) {
                 categoriaJaExibida = true;
                 break;
             }
@@ -493,7 +728,7 @@ void calcularValores() {
             int quantidadeCategoria = 0;
 
             for (int j = 0; j < quant; j++) {
-                if (textosIguais(vetor[j].categoria, vetor[i].categoria)) {
+                if (vetor[j].categoria == vetor[i].categoria) {
                     somaCategoria += vetor[j].preco;
                     quantidadeCategoria++;
                 }
@@ -507,30 +742,56 @@ void calcularValores() {
         }
     }
 
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
-//========TASK 14: REMOVER FILME PELO NOME============
+//========FUNCAO DE REMOVER FILME PELO NOME============
 
 void remocaoNome() {
     system("cls");
 
     if (quant == 0) {
-        cout << "\nO catalogo esta vazio!\n";
-        pausar();
+        cout << "\nCatalogo esta vazio!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
-    string nomeProcurado = lerTexto("\nQual filme deseja remover? ");
-    int posicao = buscarPorNome(nomeProcurado);
+    string nomeProcurado;
+
+    cout << "\nQual filme deseja remover? ";
+    getline(cin >> ws, nomeProcurado);
+
+    int posicao = -1;
+
+    for (int i = 0; i < quant; i++) {
+        if (vetor[i].nome == nomeProcurado) {
+            posicao = i;
+            break;
+        }
+    }
 
     if (posicao == -1) {
         cout << "\nFilme nao encontrado!\n";
-        pausar();
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
         return;
     }
 
     string nomeRemovido = vetor[posicao].nome;
+
+    char conf;
+    cout << "\nDeseja mesmo remover o filme \"" << nomeRemovido
+         << "\"? (S/N): ";
+    cin >> conf;
+
+    if (conf != 'S' && conf != 's') {
+        cout << "\nRemocao cancelada!\n";
+        cout << "\nPressione qualquer tecla para continuar";
+        getch();
+        return;
+    }
 
     for (int i = posicao; i < quant - 1; i++) {
         vetor[i] = vetor[i + 1];
@@ -539,7 +800,8 @@ void remocaoNome() {
     quant--;
 
     cout << "\nFilme \"" << nomeRemovido << "\" removido com sucesso!\n";
-    pausar();
+    cout << "\nPressione qualquer tecla para continuar";
+    getch();
 }
 
 //========MENU PRINCIPAL============
@@ -549,31 +811,46 @@ int main() {
     SetConsoleCP(CP_UTF8);
     setlocale(LC_ALL, ".UTF-8");
 
-    int opcao;
+    int op = 99;
 
-    do {
+    while (op != 0) {
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+
         system("cls");
         cout << "\t--------- CATÁLOGO DE FILMES --------- \n\n";
         cout << "\t*** MENU INICIAL ***\n";
         cout << "\tSelecione uma opção:\n";
-        cout << "\t1  - Inserir novo filme no início\n";
-        cout << "\t2  - Inserir um filme na posição k\n";
-        cout << "\t3  - Alterar o filme posterior à posição k\n";
+        cout << "\t1  - Inserir novo filme no inicio\n";
+        cout << "\t2  - Inserir um filme na posicao k\n";
+        cout << "\t3  - Alterar o filme posterior a posicao k\n";
         cout << "\t4  - Procurar filme pelo ID e remover o posterior\n";
         cout << "\t5  - Consultar o filme anterior ao nome escolhido\n";
         cout << "\t6  - Imprimir lista\n";
-        cout << "\t7  - Aumentar em 15% o preço do filme escolhido\n";
-        cout << "\t8  - Quantidade de filmes por avaliação\n";
+        cout << "\t7  - Aumentar em 15% o preco do filme escolhido\n";
+        cout << "\t8  - Quantidade de filmes por avaliacao\n";
         cout << "\t9  - Imprimir filmes da categoria escolhida\n";
-        cout << "\t10 - Filmes disponíveis por faixa etária\n";
+        cout << "\t10 - Filmes disponiveis por faixa etaria\n";
         cout << "\t11 - Ordem decrescente de filmes por ano\n";
-        cout << "\t12 - Valor total e média por categoria\n";
+        cout << "\t12 - Valor total e media por categoria\n";
         cout << "\t13 - Remover filme pelo nome\n";
         cout << "\t0  - Sair\n";
 
-        opcao = lerInteiro("\n\tInforme uma opção (0 a 13): ");
+        cout << "\n\tInforme uma opcao: ";
 
-        switch (opcao) {
+        if (!(cin >> op)) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\nOpcao invalida! Digite somente numeros.";
+            cout << "\nPressione qualquer tecla para continuar";
+            getch();
+            op = 99;
+            continue;
+        }
+
+        switch (op) {
             case 1:
                 insercao();
                 break;
@@ -617,11 +894,11 @@ int main() {
                 cout << "\nPrograma encerrado.\n";
                 break;
             default:
-                cout << "\nOpcao invalida! Use um numero de 0 a 13.\n";
-                pausar();
-                break;
+                cout << "\nOpcao invalida!\n";
+                cout << "\nPressione qualquer tecla para continuar";
+                getch();
         }
-    } while (opcao != 0);
+    }
 
     return 0;
 }
